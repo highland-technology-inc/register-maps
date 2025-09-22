@@ -318,7 +318,7 @@ class HtiElement():
         """Append a description element, cleaning whitespace."""
         if text:
             text = text.strip()
-            text = re.sub('\s+', ' ', text)
+            text = re.sub(r'\s+', ' ', text)
             self._description.append(text)
         
     def _textdesc(self, text):

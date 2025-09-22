@@ -1,59 +1,73 @@
-import importlib
 import io
 import os.path
 import sys
-import pkg_resources
 import jinja2
 from functools import lru_cache
+import importlib.resources
 
 from . import textfn
 
 ######################################################################
 # Resource management
 
-__version__ = pkg_resources.get_distribution(__package__).version
+__version__ = '0.0.4.dev8'
+
+# Base path for resource files
+_RSC = 'resource/'
+
+_RESOURCE_BASE = importlib.resources.files(__package__ + '.resource')
+
+def _strip_resource(x:str) -> str:
+    """Return x, optionally stripping resource/ as a prefix.
+    
+    Returns resourcename
+    """
+    if x.startswith(_RSC):
+        return x[len(_RSC):]
+    return x
 
 @lru_cache(64)
-def resource_bytes(resourcename):
+def resource_bytes(resourcename:str) -> bytes:
     """Get a package resource as binary data.
     
     resourcename starts with 'resource/' if the file is in the resource
     directory.
     """
     
-    return pkg_resources.resource_string(__package__, resourcename)
+    rsc = _RESOURCE_BASE / _strip_resource(resourcename)
+    return rsc.read_bytes()
         
 @lru_cache(64)
-def resource_text(resourcename, encoding='utf-8', errors='strict'):
+def resource_text(resourcename:str, encoding:str='utf-8', errors:str='strict') -> str:
     """Get a package resource as a text string.
     
     resourcename starts with 'resource/' if the file is in the resource
     directory.
     """
     
-    bindata = pkg_resources.resource_string(__package__, resourcename)
-    return bindata.decode(encoding, errors)
+    rsc = _RESOURCE_BASE / _strip_resource(resourcename)
+    with rsc.open('r', encoding=encoding, errors=errors) as f:
+        data = f.read()
+    return data
 
 # Create a jinja2 template environment
 jinja = jinja2.Environment(
-    loader = jinja2.PackageLoader('registermaps', 'resource'),
+    loader = jinja2.PackageLoader(__package__, "resource"),
     trim_blocks = True,
     lstrip_blocks = True
 )
 jinja.filters['reflow'] = textfn.reflow
 
 @lru_cache(64)
-def resource_template(resourcename):
-	"""Get a package resource as a Jinja template.
-	
-	Since all of our jinja resources are expected to be under resource/,
-	if that is the first part of the resource name then it is ignored.
-	"""
-	
-	RSC = 'resource/'
-	if resourcename.startswith(RSC):
-		resourcename = resourcename[len(RSC):]
-	return jinja.get_template(resourcename)
+def resource_template(resourcename:str) -> jinja2.Template:
+    """Get a package resource as a Jinja template.
+    
+    Since all of our jinja resources are expected to be under resource/,
+    if that is the first part of the resource name then it is ignored.
+    """
+    
+    resourcename = _strip_resource(resourcename)
+    return jinja.get_template(resourcename)
 
 ######################################################################
 # Package-wide global variables.

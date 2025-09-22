@@ -1,0 +1,34 @@
+[project]
+name = "registermaps"
+dynamic = ["version"]
+dependencies = [
+    "lxml >= 6.0.2",
+    "jinja2 >= 3.0"
+]
+requires-python = ">= 3.12"
+authors = [
+  {name = "Rob Gaddi", email = "rgaddi@highlandtechnology.com"}
+]
+description = "Use XML files to describe register maps; auto-generate VHDL, Python, and HTML."
+readme = "README.rst"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
+keywords = ["register", "fpga", "vhdl"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: Documentation"
+]
+
+[project.urls]
+Homepage = "https://github.com/highland-technology-inc/register-maps"
+Documentation = "https://register-maps.readthedocs.io/en/latest/"
+Repository = "https://github.com/highland-technology-inc/register-maps.git"
+
+[project.scripts]
+registermap = "registermaps.__main__:main"
+
+[build-system]
+requires = ["setuptools >= 68.1.2"]
+build-backend = "setuptools.build_meta"

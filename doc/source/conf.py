@@ -19,7 +19,7 @@
 #
 import os
 import sys
-rootpath = os.path.abspath('../..')
+rootpath = os.path.abspath('../../src')
 sys.path.insert(0, rootpath)
 
 import registermaps
