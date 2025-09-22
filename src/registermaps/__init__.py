@@ -1,4 +1,3 @@
-import importlib
+__version__ = '0.0.4.dev8'
 
-from .util import __version__
 from .output import html, python, text, vhdl, xml

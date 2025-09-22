@@ -10,8 +10,6 @@ from . import textfn
 ######################################################################
 # Resource management
 
-__version__ = '0.0.4.dev8'
-
 # Base path for resource files
 _RSC = 'resource/'
 

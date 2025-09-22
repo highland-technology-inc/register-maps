@@ -2,4 +2,4 @@ include doc/make.bat
 include doc/Makefile
 recursive-include doc/source *
 
-recursive-include registermaps/resource *
+recursive-include src/registermaps/resource *

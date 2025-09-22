@@ -7,17 +7,26 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
+import importlib
+
 # Always prefer setuptools over distutils
-from setuptools import setup, find_packages
+from setuptools import setup
 # To use a consistent encoding
 from codecs import open
-from os import path
+from pathlib import Path
 
-here = path.abspath(path.dirname(__file__))
+here = Path(__file__).parent
 
 # Get the long description from the README file
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+with (here / 'README.rst').open('r') as f:
     long_description = f.read()
+
+# Rip the version information out of __init__.py
+with (here / 'src/registermaps/__init__.py').open('r') as f:
+    for line in f:
+        if line.startswith('__version__'):
+            _, _, v = line.partition('=')
+            version = v.strip().strip("\"'")
 
 setup(
     name='registermaps',
@@ -25,13 +34,13 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.4.dev7',
+    version=version,
 
     description='Use XML files to describe register maps; auto-generate C, VHDL, Python, and HTML.',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/NJDFan/register-maps',
+    url='https://github.com/highland-technology-inc/register-maps',
 
     # Author details
     author='Rob Gaddi',
@@ -59,8 +68,7 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.12',
     ],
 
     # What does your project relate to?
@@ -68,7 +76,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=['registermaps', 'registermaps.output'],
+    # packages=['registermaps', 'registermaps.output'],
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -79,8 +87,8 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        'lxml >= 3.5.0',
-        'jinja2 >= 2.10.1'
+        'lxml >= 6.0.2',
+        'jinja2 >= 3.0'
     ],
 
     # List additional groups of dependencies here (e.g. development

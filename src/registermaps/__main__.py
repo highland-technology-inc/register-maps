@@ -6,8 +6,8 @@ import traceback
 import os.path
 import importlib
 from itertools import chain
-from .util import __version__, ProgramGlobals, Outputs
-from . import xml_parser
+from .util import ProgramGlobals, Outputs
+from . import xml_parser, __version__
 
 def main(argv = None):
     if argv is None:
